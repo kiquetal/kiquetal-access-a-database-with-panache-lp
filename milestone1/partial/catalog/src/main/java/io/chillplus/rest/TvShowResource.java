@@ -14,7 +14,7 @@ import java.util.List;
 public class TvShowResource {
 
     private long sequence = 0;
-    private List<TvShow> tvShows = new ArrayList<>();
+    private final List<TvShow> tvShows = new ArrayList<>();
 
     @POST
     public Response create(@Valid TvShow tvShow) {
@@ -36,8 +36,7 @@ public class TvShowResource {
     @Path("/{id}")
     public TvShow getOneById(@PathParam("id") long id) {
         TvShow entity = null;
-        for (int i = 0; i < tvShows.size(); i++) {
-            TvShow tvShow = tvShows.get(i);
+        for (TvShow tvShow : tvShows) {
             if (tvShow.id == id) {
                 entity = tvShow;
                 break;
