@@ -67,6 +67,7 @@ public class TvShowResource {
         if (index < tvShows.size()) {
             tvShows.remove(index);
         }
+
         return Response.ok().build();
     }
 
