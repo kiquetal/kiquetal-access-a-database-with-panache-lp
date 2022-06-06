@@ -2,6 +2,7 @@ package io.chillplus;
 
 import io.chillplus.domain.TvShow;
 import io.quarkus.test.junit.QuarkusTest;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -174,7 +175,7 @@ public class TvShowResourceTest {
 
         given()
                 .when()
-                .get("/api/tv/{id}", 0)
+                .get("/api/tv/{id}", 1)
                 .then()
                 .statusCode(200);
     }
@@ -266,4 +267,47 @@ public class TvShowResourceTest {
                 .body("$.size()", is(0));
     }
 
+    @Test
+    public void updateTvShow()
+    {
+        TvShow tvShow = new TvShow();
+        tvShow.title = DEFAULT_TITLE;
+      TvShow tvShow1=  given()
+                .body(tvShow)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .when()
+                .post("/api/tv")
+                .then()
+                .statusCode(201)
+                .contentType(APPLICATION_JSON)
+                .body("title", is(tvShow.title))
+                .extract().as(TvShow.class);
+      Long id = tvShow1.id;
+      tvShow.id = id;
+      tvShow.title = "CCC";
+        given()
+                .body(tvShow)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .when()
+                .put("/api/tv")
+                .then()
+                .statusCode(200)
+                .contentType(APPLICATION_JSON)
+                .body("title", Matchers.is("CCC"));
+
+        tvShow.id =null;
+        given()
+                .body(tvShow)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .when()
+                .put("/api/tv")
+                .then()
+                .statusCode(400);
+
+
+
+    }
 }

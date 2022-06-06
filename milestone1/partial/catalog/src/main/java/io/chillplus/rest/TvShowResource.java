@@ -2,6 +2,7 @@ package io.chillplus.rest;
 
 import io.chillplus.domain.TvShow;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -14,61 +15,62 @@ import java.util.List;
 public class TvShowResource {
 
     private long sequence = 0;
-    private final List<TvShow> tvShows = new ArrayList<>();
-
     @POST
+    @Transactional
     public Response create(@Valid TvShow tvShow) {
+
         if (tvShow.id != null) {
             throw new WebApplicationException("A new entity cannot already have an ID", Response.Status.BAD_REQUEST);
         }
-        tvShow.id = sequence;
-        sequence++;
-        tvShows.add(tvShow);
+        tvShow.persist();
         return Response.status(Response.Status.CREATED).entity(tvShow).build();
     }
 
     @GET
     public List<TvShow> getAll() {
-        return tvShows;
+        return TvShow.listAll();
     }
 
     @GET
     @Path("/{id}")
-    public TvShow getOneById(@PathParam("id") long id) {
-        TvShow entity = null;
-        for (TvShow tvShow : tvShows) {
-            if (tvShow.id == id) {
-                entity = tvShow;
-                break;
-            }
-        }
-        if (entity == null) {
-            throw new WebApplicationException("Entity does not exist. ", Response.Status.NOT_FOUND);
-        }
-        return entity;
+    public Response getOneById(@PathParam("id") long id) {
+     TvShow find    =   TvShow.findById(id);
+     if (find !=null)
+         return Response.ok(find).build();
+     return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @DELETE
+    @Transactional
     public Response deleteAll() {
-        tvShows.clear();
+        TvShow.deleteAll();
         return Response.ok().build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response deleteOne(@PathParam("id") long id) {
-        int index = 0;
-        for (; index < tvShows.size(); index++) {
-            TvShow tvShow = tvShows.get(index);
-            if (tvShow.id == id) {
-                break;
-            }
-        }
-        if (index < tvShows.size()) {
-            tvShows.remove(index);
-        }
-
+        boolean deleted = TvShow.deleteById(id);
+        if (deleted)
         return Response.ok().build();
+
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    @PUT
+    @Transactional
+    public Response update(@Valid TvShow tvShow)
+    {
+        if (tvShow.id ==null)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        TvShow findObject = TvShow.findById(tvShow.id);
+        if (findObject !=null)
+        {
+            findObject = tvShow;
+            return Response.ok(findObject).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+
+
     }
 
 }

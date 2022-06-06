@@ -1,14 +1,20 @@
 package io.chillplus.domain;
 
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-public class TvShow {
+@Entity
+@Table(name = "tv_show")
+public class TvShow extends PanacheEntity
+{
 
-    public Long id;
 
     @NotBlank
+    @Column(name = "title")
     public String title;
-
+    @Column(name ="category")
     public String category;
 }
