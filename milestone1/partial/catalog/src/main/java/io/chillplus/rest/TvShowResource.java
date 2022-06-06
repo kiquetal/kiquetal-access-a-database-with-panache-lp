@@ -28,7 +28,8 @@ public class TvShowResource {
 
     @GET
     public List<TvShow> getAll() {
-        return TvShow.listAll();
+
+        return TvShow.findByOrderTille();
     }
 
     @GET
@@ -71,6 +72,17 @@ public class TvShowResource {
         return Response.status(Response.Status.NOT_FOUND).build();
 
 
+    }
+    @GET
+    @Path("/search")
+    public Response getOneByTitle(@QueryParam("title") String title)
+    {
+        TvShow findObject = TvShow.findByTitle(title);
+        if (findObject !=null)
+        {
+            return Response.ok(findObject).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 }
