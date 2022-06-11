@@ -33,13 +33,14 @@ public class TvShow extends PanacheEntity
     {
         return TvShow.find("title",title).firstResult();
     }
-    public static List<TvShow> findByCategoryIgnoreCase(String category,int pageSize, int pageIndex)
+    public static List<TvShow> findByCategoryIgnoreCase(String category,int pageIndex, int pageSize)
     {
       PanacheQuery<TvShow> tvShows = TvShow.find(("lower(category) = ?1"),category.toLowerCase());
-
       tvShows.page(Page.of(pageIndex,pageSize));
 
-      return tvShows.nextPage().stream().collect(Collectors.toList());
+      System.out.println(tvShows.hasNextPage());
+      System.out.println(tvShows.count());
+      return tvShows.stream().collect(Collectors.toList());
 
     }
 }

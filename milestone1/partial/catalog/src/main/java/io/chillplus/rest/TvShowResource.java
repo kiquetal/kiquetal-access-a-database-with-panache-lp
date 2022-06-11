@@ -90,7 +90,8 @@ public class TvShowResource {
                                      @QueryParam("pageIndex") int pageIndex,
                                      @QueryParam("pageSize") int pageSize)
     {
-        List<TvShow> findObject = TvShow.findByCategoryIgnoreCase(category,pageSize,pageIndex);
+        List<TvShow> findObject = TvShow.findByCategoryIgnoreCase(category,pageIndex,pageSize);
+        System.out.println(findObject.size());
         if (findObject !=null)
         {
             return Response.ok(findObject).build();

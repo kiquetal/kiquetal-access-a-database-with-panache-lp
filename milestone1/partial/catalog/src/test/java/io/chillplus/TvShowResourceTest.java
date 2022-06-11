@@ -341,6 +341,52 @@ public class TvShowResourceTest {
     public void getAllTvShowsByCategory()
     {
 
+        TvShow tvShow = new TvShow();
+        tvShow.title = DEFAULT_TITLE;
+        tvShow.category = "Comedy";
+         given()
+                .body(tvShow)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .when()
+                .post("/api/tv")
+                .then()
+                .statusCode(201)
+                .contentType(APPLICATION_JSON)
+                .body("title", is(tvShow.title));
+         tvShow.title= "CCC";
+         tvShow.category = "Comedy";
+        given()
+                .body(tvShow)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .when()
+                .post("/api/tv")
+                .then()
+                .statusCode(201)
+                .contentType(APPLICATION_JSON)
+                .body("title", is(tvShow.title));
+        tvShow.title= "DDD";
+        tvShow.category = "Comedy";
+        given()
+                .body(tvShow)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .when()
+                .post("/api/tv")
+                .then()
+                .statusCode(201)
+                .contentType(APPLICATION_JSON)
+                .body("title", is(tvShow.title));
+
+        given()
+                .queryParam("pageSize", 3)
+                .queryParam("pageIndex", 0)
+                .get("/api/tv/categories/{category}", "Comedy")
+                .then()
+                .body("$.size()", is(3));
+
+
     }
 
 }
