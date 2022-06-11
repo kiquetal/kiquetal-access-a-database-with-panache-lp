@@ -308,11 +308,39 @@ public class TvShowResourceTest {
                 .statusCode(400);
 
 
-
     }
     @Test
-    public void getAllTvShowsOrderByTitle()
+    public void getTvShowByTitle() {
+
+        TvShow tvShow = new TvShow();
+        tvShow.title = DEFAULT_TITLE;
+        TvShow tvShow1=  given()
+                .body(tvShow)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .when()
+                .post("/api/tv")
+                .then()
+                .statusCode(201)
+                .contentType(APPLICATION_JSON)
+                .body("title", is(tvShow.title))
+                .extract().as(TvShow.class);
+
+        given()
+                .queryParam("title", DEFAULT_TITLE)
+                .get("/api/tv/search")
+                .then()
+                .statusCode(200)
+                .contentType(APPLICATION_JSON)
+                .body("title", is(tvShow1.title));
+
+
+    }
+
+    @Test
+    public void getAllTvShowsByCategory()
     {
 
     }
+
 }

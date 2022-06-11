@@ -84,5 +84,19 @@ public class TvShowResource {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
+    @GET
+    @Path("/categories/{category}")
+    public Response getAllByCategory(@PathParam("category") String category,
+                                     @QueryParam("pageIndex") int pageIndex,
+                                     @QueryParam("pageSize") int pageSize)
+    {
+        List<TvShow> findObject = TvShow.findByCategoryIgnoreCase(category,pageSize,pageIndex);
+        if (findObject !=null)
+        {
+            return Response.ok(findObject).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
 
 }
